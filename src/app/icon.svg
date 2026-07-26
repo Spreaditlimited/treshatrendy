@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="22" fill="#fbfaf7"/>
+  <circle cx="63" cy="14" r="8" fill="#b99a50"/>
+  <circle cx="43" cy="74" r="7" fill="#201713"/>
+  <circle cx="42" cy="105" r="8" fill="#b99a50"/>
+  <text x="38" y="82" fill="#201713" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700">T</text>
+  <text x="18" y="88" fill="#b99a50" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700">T</text>
+</svg>

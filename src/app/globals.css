@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --tresha-background: #fbfaf7;
+  --tresha-foreground: #201713;
+  --tresha-accent-brown: #8a3f2b;
+  --tresha-gold: #f5c56f;
+  --tresha-border: #e8ded5;
+  --tresha-muted: #6d5a51;
+  --tresha-cream: #fff4e7;
+  --tresha-soft-gold: #ffd992;
+  --tresha-image-base: #eee3d8;
+  --tresha-nav: #5c4b42;
+
+  --background: var(--tresha-background);
+  --foreground: var(--tresha-foreground);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-tresha-bg: var(--tresha-background);
+  --color-tresha-ink: var(--tresha-foreground);
+  --color-tresha-brown: var(--tresha-accent-brown);
+  --color-tresha-gold: var(--tresha-gold);
+  --color-tresha-border: var(--tresha-border);
+  --color-tresha-muted: var(--tresha-muted);
+  --color-tresha-cream: var(--tresha-cream);
+  --color-tresha-soft-gold: var(--tresha-soft-gold);
+  --color-tresha-image-base: var(--tresha-image-base);
+  --color-tresha-nav: var(--tresha-nav);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
