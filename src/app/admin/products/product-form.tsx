@@ -266,7 +266,8 @@ export function ProductForm({ categories, product }: ProductFormProps) {
               Upload product photos
             </p>
             <p className="mt-1 text-xs leading-5 text-[#6d5a51]">
-              Use clear product images. Multiple photos are supported.
+              Use clear product images. Multiple photos are supported; for best
+              results, keep each image under 5MB.
             </p>
           </div>
           <input
