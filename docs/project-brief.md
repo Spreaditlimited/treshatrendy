@@ -4,7 +4,7 @@
 
 - Brand name: Treshatrendy
 - Store type: custom African fashion ecommerce store
-- Product categories: Tops, Dresses, Bottoms, Sets, Kids, Men
+- Product categories: Tops, Dresses, Jumpsuits, Bottoms, Sets, Kids, Men
 - Launch markets: Nigeria, Canada, United States
 - Currencies: NGN, CAD, USD
 - Currency defaults:

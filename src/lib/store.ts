@@ -25,6 +25,11 @@ export const categories = [
     description: "Occasion-ready silhouettes in vibrant African prints.",
   },
   {
+    name: "Jumpsuits",
+    slug: "jumpsuits",
+    description: "One-piece silhouettes for polished everyday and occasion styling.",
+  },
+  {
     name: "Bottoms",
     slug: "bottoms",
     description: "Skirts and trousers designed for polished styling.",
