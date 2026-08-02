@@ -7,7 +7,7 @@ The production target is Supabase Postgres, which fits the Vercel hosting direct
 ## Core Tables
 
 - `AdminUser`: one admin at launch, expandable later for staff accounts.
-- `Category`: Tops, Dresses, Jumpsuits, Bottoms, Sets, Kids, Men.
+- `Category`: Tops, Hoodies, Dresses, Jumpsuits, Bottoms, Sets, Kids, Men.
 - `Product`: product content, SEO fields, publish status, and timestamps.
 - `ProductCategory`: supports products appearing in more than one category.
 - `ProductImage`: multiple images per product with alt text and ordering.

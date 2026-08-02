@@ -20,6 +20,11 @@ export const categories = [
     description: "Statement blouses, wrap tops, and easy daily pieces.",
   },
   {
+    name: "Hoodies",
+    slug: "hoodies",
+    description: "Comfortable hoodies with distinctive African-inspired details.",
+  },
+  {
     name: "Dresses",
     slug: "dresses",
     description: "Occasion-ready silhouettes in vibrant African prints.",
