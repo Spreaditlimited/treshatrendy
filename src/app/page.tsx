@@ -170,7 +170,7 @@ export default async function Home() {
       {/* Editorial Intro */}
       <section className="mx-auto max-w-4xl px-6 py-16 text-center lg:px-12">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-400">
-          The Maison
+          The House of Treshatrendy
         </p>
         <h2 className="mt-4 text-3xl font-light tracking-tight sm:text-4xl text-neutral-900">
           Where Tradition Meets Modern Elegance
@@ -188,7 +188,7 @@ export default async function Home() {
         <div className="mx-auto max-w-[96rem] px-6 lg:px-12">
           <div className="text-center mb-10">
             <p className="text-xs font-medium uppercase tracking-[0.3em] text-neutral-400">
-              An Anthology of Style
+              A Collection of Style
             </p>
             <h2 className="mt-2 text-3xl font-light tracking-tight">Discover the Collections</h2>
           </div>
