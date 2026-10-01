@@ -5,10 +5,10 @@ import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteFooter } from "@/components/site-footer";
+import { SalePrice } from "@/components/sale-price";
 import { getActiveCurrency } from "@/lib/currency";
 import { mainNavItems } from "@/lib/navigation";
 import { getStoreProducts } from "@/lib/products";
-import { formatPrice } from "@/lib/store";
 
 const collections = [
   {
@@ -153,9 +153,11 @@ export default async function Home() {
                   <h3 className="text-sm font-normal text-neutral-900 group-hover:underline decoration-neutral-300 underline-offset-4">
                     {product.name}
                   </h3>
-                  <p className="text-sm font-medium text-neutral-800 mt-1">
-                    {formatPrice(product.prices[activeCurrency], activeCurrency)}
-                  </p>
+                  <SalePrice
+                    amount={product.prices[activeCurrency]}
+                    className="mt-1 text-sm font-medium text-neutral-800"
+                    currency={activeCurrency}
+                  />
                 </div>
               </Link>
             ))}

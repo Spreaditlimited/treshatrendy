@@ -4,10 +4,10 @@ import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
 import { MobileMenu } from "@/components/mobile-menu";
+import { SalePrice } from "@/components/sale-price";
 import { getActiveCurrency } from "@/lib/currency";
 import { mainNavItems } from "@/lib/navigation";
 import { getStoreProducts } from "@/lib/products";
-import { formatPrice } from "@/lib/store";
 
 type CollectionPageProps = {
   eyebrow: string;
@@ -93,9 +93,11 @@ export async function CollectionPage({
                   <p className="mt-2 text-sm leading-6 text-[#6d5a51]">
                     {product.shortSummary}
                   </p>
-                  <p className="mt-4 font-semibold">
-                    {formatPrice(product.prices[activeCurrency], activeCurrency)}
-                  </p>
+                  <SalePrice
+                    amount={product.prices[activeCurrency]}
+                    className="mt-4 font-semibold"
+                    currency={activeCurrency}
+                  />
                 </div>
               </Link>
             ))}

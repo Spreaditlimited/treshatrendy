@@ -83,6 +83,11 @@ export default async function CartPage() {
                     </p>
                     <p className="mt-2 text-sm font-semibold text-[#201713]">
                       {formatPrice(line.unitPrice, cart.currency)}
+                      {cart.saleActive ? (
+                        <span className="ml-2 font-normal text-[#76665e] line-through">
+                          {formatPrice(line.originalUnitPrice, cart.currency)}
+                        </span>
+                      ) : null}
                     </p>
                     <div
                       className={`mt-3 rounded-md border px-3 py-2 text-xs ${
@@ -140,6 +145,11 @@ export default async function CartPage() {
                   {formatPrice(cart.subtotal, cart.currency)}
                 </span>
               </div>
+              {cart.saleActive ? (
+                <p className="mt-3 text-sm font-semibold text-[#a4233a]">
+                  Christmas sale discount applied (20% off products).
+                </p>
+              ) : null}
               <p className="mt-3 text-sm leading-6 text-[#6d5a51]">
                 Shipping and taxes will be confirmed during checkout.
               </p>

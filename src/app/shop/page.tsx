@@ -4,9 +4,9 @@ import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
 import { MobileMenu } from "@/components/mobile-menu";
+import { SalePrice } from "@/components/sale-price";
 import { getStoreCategories, getStoreProducts } from "@/lib/products";
 import { getActiveCurrency } from "@/lib/currency";
-import { formatPrice } from "@/lib/store";
 import { ShopFilterForm } from "./filter-form";
 
 type ShopPageProps = {
@@ -207,9 +207,11 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                   {product.shortSummary}
                 </p>
                 <div className="mt-4 flex items-center justify-between gap-3">
-                  <p className="font-semibold">
-                    {formatPrice(product.prices[activeCurrency], activeCurrency)}
-                  </p>
+                  <SalePrice
+                    amount={product.prices[activeCurrency]}
+                    className="font-semibold"
+                    currency={activeCurrency}
+                  />
                   <div className="flex gap-1">
                     {product.colors.slice(0, 3).map((color) => (
                       <span

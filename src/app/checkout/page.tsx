@@ -94,6 +94,11 @@ export default async function CheckoutPage() {
               {formatPrice(cart.subtotal, cart.currency)}
             </span>
           </div>
+          {cart.saleActive ? (
+            <p className="mt-3 text-sm font-semibold text-[#a4233a]">
+              Christmas sale discount applied (20% off products).
+            </p>
+          ) : null}
           <p className="mt-3 text-xs leading-5 text-[#6d5a51]">
             Shipping is selected in the checkout form and added before payment.
           </p>

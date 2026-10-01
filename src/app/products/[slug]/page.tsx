@@ -5,9 +5,10 @@ import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
 import { MobileMenu } from "@/components/mobile-menu";
+import { SalePrice } from "@/components/sale-price";
 import { getStoreProductBySlug } from "@/lib/products";
 import { getActiveCurrency } from "@/lib/currency";
-import { currencies, formatPrice } from "@/lib/store";
+import { currencies } from "@/lib/store";
 import { PurchaseForm } from "./purchase-form";
 
 type ProductPageProps = {
@@ -100,9 +101,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 >
                   {currency.code}
                 </p>
-                <p className="mt-1 text-lg font-semibold">
-                  {formatPrice(product.prices[currency.code], currency.code)}
-                </p>
+                <SalePrice
+                  amount={product.prices[currency.code]}
+                  className={`mt-1 text-lg font-semibold ${
+                    activeCurrency === currency.code ? "[&>span:first-child]:text-[#ffd992] [&>span:nth-child(2)]:text-white/70" : ""
+                  }`}
+                  currency={currency.code}
+                />
               </div>
             ))}
           </div>

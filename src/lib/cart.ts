@@ -7,6 +7,10 @@ import {
   getMarketStock,
 } from "@/lib/regional-stock";
 import type { CurrencyCode } from "@/lib/store";
+import {
+  getChristmasSalePrice,
+  isChristmasSaleActive,
+} from "@/lib/christmas-sale";
 
 const CART_COOKIE = "treshatrendy_cart";
 
@@ -27,6 +31,7 @@ export type CartLine = {
   availabilityLabel: string;
   availabilityDetail: string;
   availabilityTone: "ready" | "delayed" | "unavailable";
+  originalUnitPrice: number;
   unitPrice: number;
   lineTotal: number;
 };
@@ -37,6 +42,7 @@ export type CartSummary = {
   lines: CartLine[];
   subtotal: number;
   itemCount: number;
+  saleActive: boolean;
 };
 
 async function getCartSessionId(createIfMissing: boolean) {
@@ -85,6 +91,8 @@ export async function getCartSummary(
   currencyOverride?: CurrencyCode,
 ): Promise<CartSummary> {
   const currency = currencyOverride ?? (await getActiveCurrency());
+  const now = new Date();
+  const saleActive = isChristmasSaleActive(now);
 
   if (!prisma) {
     return {
@@ -93,6 +101,7 @@ export async function getCartSummary(
       lines: [],
       subtotal: 0,
       itemCount: 0,
+      saleActive,
     };
   }
 
@@ -105,6 +114,7 @@ export async function getCartSummary(
       lines: [],
       subtotal: 0,
       itemCount: 0,
+      saleActive,
     };
   }
 
@@ -142,6 +152,7 @@ export async function getCartSummary(
       lines: [],
       subtotal: 0,
       itemCount: 0,
+      saleActive,
     };
   }
 
@@ -149,7 +160,8 @@ export async function getCartSummary(
     const price = item.product.prices.find(
       (productPrice) => productPrice.currency === currency,
     );
-    const unitPrice = Number(price?.amount ?? 0);
+    const originalUnitPrice = Number(price?.amount ?? 0);
+    const unitPrice = getChristmasSalePrice(originalUnitPrice, currency, now);
     const marketStock = getMarketStock(item.variant, currency);
     const availability = getAvailabilityMessage(item.variant, currency);
 
@@ -170,6 +182,7 @@ export async function getCartSummary(
       availabilityLabel: availability.label,
       availabilityDetail: availability.detail,
       availabilityTone: availability.tone,
+      originalUnitPrice,
       unitPrice,
       lineTotal: unitPrice * item.quantity,
     };
@@ -181,6 +194,7 @@ export async function getCartSummary(
     lines,
     subtotal: lines.reduce((sum, line) => sum + line.lineTotal, 0),
     itemCount: lines.reduce((sum, line) => sum + line.quantity, 0),
+    saleActive,
   };
 }
 
