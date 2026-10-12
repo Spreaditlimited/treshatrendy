@@ -109,7 +109,11 @@ export default async function AdminOrderDetailPage({
                       {item.productName}
                     </p>
                     <p className="mt-1 text-sm text-[#6e5b4f]">
-                      {item.colorName} · Size {item.size} · Qty {item.quantity}
+                      {item.colorName} · {item.sizeLabel} {item.size}
+                      {item.secondSize
+                        ? ` · ${item.secondSizeLabel} ${item.secondSize}`
+                        : ""}{" "}
+                      · Qty {item.quantity}
                     </p>
                   </div>
                   <p className="text-sm font-medium text-[#201713]">

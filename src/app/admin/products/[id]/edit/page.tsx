@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { AdminShell } from "@/components/admin-shell";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/db";
+import { getStoreCategories } from "@/lib/products";
 import { ProductForm } from "../../product-form";
 
 export const metadata = {
@@ -41,14 +42,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         },
       },
     }),
-    prisma.category.findMany({
-      where: {
-        isActive: true,
-      },
-      orderBy: {
-        sortOrder: "asc",
-      },
-    }),
+    getStoreCategories(),
   ]);
 
   if (!product) {

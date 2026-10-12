@@ -12,7 +12,7 @@ export default function ChildrenPage() {
       eyebrow="Children's Collection"
       title="Joyful African Fashion for Children"
       description="Beautifully made outfits designed to celebrate colour, culture and joyful self-expression for younger trendsetters."
-      categorySlugs={["kids"]}
+      categorySlugs={["kids", "mom-daughter"]}
       shopHref="/shop?category=kids"
     />
   );

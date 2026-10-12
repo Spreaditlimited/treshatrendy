@@ -54,6 +54,16 @@ export const categories = [
     slug: "men",
     description: "Modern menswear with rich tailoring details.",
   },
+  {
+    name: "Mr&Mrs",
+    slug: "mr-mrs",
+    description: "Coordinated couples' looks with separately selected men's and women's sizes.",
+  },
+  {
+    name: "Mom&Daughter",
+    slug: "mom-daughter",
+    description: "Coordinated mother-and-daughter looks with separately selected sizes.",
+  },
 ] as const;
 
 export const sizes = ["6", "8", "10", "12", "14", "16", "18", "20", "22"] as const;

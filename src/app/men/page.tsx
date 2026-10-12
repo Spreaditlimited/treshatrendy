@@ -12,7 +12,7 @@ export default function MenPage() {
       eyebrow="Men's Collection"
       title="Refined African Style for Men"
       description="Explore contemporary menswear shaped by comfort, craftsmanship and a confident modern perspective on African fashion."
-      categorySlugs={["men"]}
+      categorySlugs={["men", "mr-mrs"]}
       shopHref="/shop?category=men"
     />
   );

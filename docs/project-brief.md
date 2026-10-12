@@ -4,7 +4,7 @@
 
 - Brand name: Treshatrendy
 - Store type: custom African fashion ecommerce store
-- Product categories: Tops, Hoodies, Dresses, Jumpsuits, Bottoms, Sets, Kids, Men
+- Product categories: Tops, Hoodies, Dresses, Jumpsuits, Bottoms, Sets, Kids, Men, Mr&Mrs, Mom&Daughter
 - Launch markets: Nigeria, Canada, United States
 - Currencies: NGN, CAD, USD
 - Currency defaults:
@@ -14,7 +14,7 @@
 - Product pricing: manual prices per currency
 - Checkout: immediate online checkout
 - Current payment methods: Stripe for CAD/USD and Paystack for NGN
-- Inventory: stock tracked per size, color, and region
+- Inventory: stock tracked per size, color, and region; Mr&Mrs and Mom&Daughter sets track a separate size for each wearer
 - Sizes: 6, 8, 10, 12, 14, 16, 18, 20, 22
 - Product images: multiple photos per product
 - Admin users: one admin at launch

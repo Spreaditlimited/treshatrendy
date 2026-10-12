@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/admin-shell";
 import { requireAdmin } from "@/lib/admin-auth";
-import { prisma } from "@/lib/db";
+import { getStoreCategories } from "@/lib/products";
 import { ProductForm } from "../product-form";
 
 export const metadata = {
@@ -11,16 +11,7 @@ export const metadata = {
 export default async function NewProductPage() {
   const admin = await requireAdmin();
 
-  const categories = prisma
-    ? await prisma.category.findMany({
-        where: {
-          isActive: true,
-        },
-        orderBy: {
-          sortOrder: "asc",
-        },
-      })
-    : [];
+  const categories = await getStoreCategories();
 
   return (
     <AdminShell admin={admin}>

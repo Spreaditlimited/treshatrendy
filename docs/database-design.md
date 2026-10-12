@@ -12,7 +12,7 @@ The production target is Supabase Postgres, which fits the Vercel hosting direct
 - `ProductCategory`: supports products appearing in more than one category.
 - `ProductImage`: multiple images per product with alt text and ordering.
 - `ProductPrice`: manual prices per product in NGN, CAD, and USD.
-- `ProductVariant`: size/color/regional stock rows, for example size 12 in Red with Nigeria and Canada stock counts.
+- `ProductVariant`: size/color/regional stock rows, for example size 12 in Red with Nigeria and Canada stock counts. Coordinated Mr&Mrs and Mom&Daughter products track each wearer's size combination and its regional stock separately.
 - `Customer`: optional customer profile created from checkout details.
 - `Cart`: guest or customer cart with selected currency.
 - `CartItem`: product variant and quantity inside a cart.
@@ -23,7 +23,7 @@ The production target is Supabase Postgres, which fits the Vercel hosting direct
 ## Important Rules
 
 - Prices are stored manually per currency, not auto-converted.
-- Product stock is tracked at the variant level by size, color, and region.
+- Product stock is tracked at the variant level by size, color, and region. Coordinated sets have a second size field, and stock is tracked for each size pair.
 - Product pages can be unpublished without deleting product history.
 - Orders store product names, slugs, sizes, colors, and prices at purchase time.
 - Stripe is used for CAD/USD checkout and Paystack is used for NGN checkout.
@@ -46,6 +46,8 @@ npm run db:setup
 ```
 
 This runs `prisma db push` to create the tables and `tsx prisma/seed.ts` to insert starter categories/products.
+
+When deploying schema changes to an existing production database, run `npm run db:push` against that database before deploying application code that uses the new fields. Do not run the seed script on a live store just to add categories; missing built-in categories are created safely when shop or admin category lists load.
 
 ## Next Step
 

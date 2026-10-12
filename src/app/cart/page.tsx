@@ -81,7 +81,8 @@ export default async function CartPage() {
                       {line.name}
                     </Link>
                     <p className="mt-1 text-sm text-[#6d5a51]">
-                      {line.colorName} · Size {line.size}
+                      {line.colorName} · {line.sizeLabel} {line.size}
+                      {line.secondSize ? ` · ${line.secondSizeLabel} ${line.secondSize}` : ""}
                     </p>
                     <p className="mt-2 text-sm font-semibold text-[#201713]">
                       {formatPrice(line.unitPrice, cart.currency)}

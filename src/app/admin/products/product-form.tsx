@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
-import type { Category, Product } from "@/generated/prisma/client";
+import { useActionState, useState } from "react";
+import type { Product } from "@/generated/prisma/client";
 import { currencies, sizes } from "@/lib/store";
 import type { ProductFormState } from "./actions";
 import { createProductAction, updateProductAction } from "./actions";
@@ -13,6 +13,7 @@ type ProductWithDetails = Product & {
   prices: { currency: string; amount: unknown }[];
   variants: {
     size: string;
+    secondSize?: string;
     colorName: string;
     colorHex: string | null;
     stock: number;
@@ -22,7 +23,7 @@ type ProductWithDetails = Product & {
 };
 
 type ProductFormProps = {
-  categories: Category[];
+  categories: { id: string; name: string; slug: string }[];
   product?: ProductWithDetails;
 };
 
@@ -59,13 +60,17 @@ function getRegionalStock(
   colorName: string,
   size: string,
   region: "nigeria" | "canada",
+  secondSize = "",
 ) {
   if (!colorName) {
     return "";
   }
 
   const variant = product?.variants.find(
-    (item) => item.colorName === colorName && item.size === size,
+    (item) =>
+      item.colorName === colorName &&
+      item.size === size &&
+      (item.secondSize ?? "") === secondSize,
   );
 
   if (!variant) {
@@ -90,9 +95,18 @@ export function ProductForm({ categories, product }: ProductFormProps) {
   const action = product ? updateProductAction : createProductAction;
   const [state, formAction, isPending] = useActionState(action, initialState);
   const colorRows = getColorRows(product);
-  const selectedCategories = new Set(
-    product?.categories.map((category) => category.categoryId) ?? [],
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState(
+    () => new Set(product?.categories.map((category) => category.categoryId) ?? []),
   );
+  const pairedCategory = categories.find(
+    (category) => selectedCategoryIds.has(category.id) &&
+      (category.slug === "mr-mrs" || category.slug === "mom-daughter"),
+  );
+  const pairedSizeLabels = pairedCategory?.slug === "mr-mrs"
+    ? { first: "Men's size", second: "Women's size" }
+    : pairedCategory?.slug === "mom-daughter"
+      ? { first: "Mom's size", second: "Daughter's size" }
+      : null;
 
   return (
     <form action={formAction} className="grid gap-8">
@@ -182,7 +196,30 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                   name="categoryIds"
                   type="checkbox"
                   value={category.id}
-                  defaultChecked={selectedCategories.has(category.id)}
+                  checked={selectedCategoryIds.has(category.id)}
+                  onChange={(event) => {
+                    setSelectedCategoryIds((current) => {
+                      const next = new Set(current);
+                      if (event.target.checked) {
+                        if (
+                          category.slug === "mr-mrs" ||
+                          category.slug === "mom-daughter"
+                        ) {
+                          categories
+                            .filter(
+                              (item) =>
+                                item.slug === "mr-mrs" ||
+                                item.slug === "mom-daughter",
+                            )
+                            .forEach((item) => next.delete(item.id));
+                        }
+                        next.add(category.id);
+                      } else {
+                        next.delete(category.id);
+                      }
+                      return next;
+                    });
+                  }}
                 />
                 {category.name}
               </label>
@@ -331,6 +368,63 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                 </label>
               </div>
               <div className="mt-4 overflow-x-auto">
+                {pairedSizeLabels ? (
+                  <div className="space-y-5">
+                    <p className="text-xs leading-5 text-[#6e5b4f]">
+                      Enter stock for each size combination. Each pair is tracked
+                      separately for Nigeria and Canada.
+                    </p>
+                    {(["nigeria", "canada"] as const).map((region) => (
+                      <div className="overflow-x-auto" key={region}>
+                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#3b2a22]">
+                          {region}
+                        </h3>
+                        <table className="w-full min-w-[900px] border-separate border-spacing-0 text-left text-xs">
+                          <thead>
+                            <tr className="text-[#6e5b4f]">
+                              <th className="pb-2 pr-3 font-semibold">
+                                {pairedSizeLabels.first} / {pairedSizeLabels.second}
+                              </th>
+                              {sizes.map((secondSize) => (
+                                <th className="pb-2 pr-3 font-semibold" key={secondSize}>
+                                  {secondSize}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sizes.map((firstSize) => (
+                              <tr key={firstSize}>
+                                <th className="py-2 pr-3 font-semibold text-[#3b2a22]">
+                                  {firstSize}
+                                </th>
+                                {sizes.map((secondSize) => (
+                                  <td className="py-2 pr-3" key={secondSize}>
+                                    <input
+                                      aria-label={`${region} stock for ${color.name || "colour"}, ${pairedSizeLabels.first.toLowerCase()} ${firstSize}, ${pairedSizeLabels.second.toLowerCase()} ${secondSize}`}
+                                      className="h-10 w-16 rounded-md border border-[#d6c7b7] bg-white px-2 text-sm outline-none focus:border-[#8d4931]"
+                                      name={`${region}-stock-${colorIndex}-${firstSize}-${secondSize}`}
+                                      type="number"
+                                      min="0"
+                                      step="1"
+                                      defaultValue={getRegionalStock(
+                                        product,
+                                        color.name,
+                                        firstSize,
+                                        region,
+                                        secondSize,
+                                      )}
+                                    />
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
                 <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left text-xs">
                   <thead>
                     <tr className="text-[#6e5b4f]">
@@ -381,6 +475,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                     </tr>
                   </tbody>
                 </table>
+                )}
               </div>
             </div>
           ))}

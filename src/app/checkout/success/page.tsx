@@ -169,7 +169,11 @@ export default async function CheckoutSuccessPage({
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-white">{item.productName}</p>
                           <p className="mt-1 text-xs leading-5 text-[#f4dfc8]">
-                            Size {item.size} · {item.colorName} · Qty {item.quantity}
+                            {item.sizeLabel} {item.size}
+                            {item.secondSize
+                              ? ` · ${item.secondSizeLabel} ${item.secondSize}`
+                              : ""} ·{" "}
+                            {item.colorName} · Qty {item.quantity}
                           </p>
                         </div>
                         <p className="text-sm font-semibold">

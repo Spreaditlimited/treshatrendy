@@ -20,6 +20,7 @@ export type StoreProductDetail = StoreProduct & {
   variants: {
     id: string;
     size: string;
+    secondSize: string;
     colorName: string;
     colorHex: string | null;
     stock: number;
@@ -30,7 +31,25 @@ export type StoreProductDetail = StoreProduct & {
 
 export async function getStoreCategories() {
   if (!prisma) {
-    return seedCategories;
+    return seedCategories.map((category) => ({
+      ...category,
+      id: category.slug,
+    }));
+  }
+
+  const existingCategories = await prisma.category.findMany({
+    select: { slug: true },
+  });
+  const existingSlugs = new Set(existingCategories.map((category) => category.slug));
+  const missingCategories = seedCategories.filter(
+    (category) => !existingSlugs.has(category.slug),
+  );
+
+  if (missingCategories.length > 0) {
+    await prisma.category.createMany({
+      data: missingCategories,
+      skipDuplicates: true,
+    });
   }
 
   return prisma.category.findMany({
@@ -53,6 +72,7 @@ export async function getStoreProductBySlug(
       ["6", "8", "10", "12", "14", "16", "18", "20", "22"].map((size) => ({
         id: `${product.slug}-${color.name}-${size}`,
         size,
+        secondSize: "",
         colorName: color.name,
         colorHex: color.hex,
         stock: 5,
@@ -131,6 +151,7 @@ export async function getStoreProductBySlug(
     variants: product.variants.map((variant) => ({
       id: variant.id,
       size: variant.size,
+      secondSize: variant.secondSize,
       colorName: variant.colorName,
       colorHex: variant.colorHex,
       stock: variant.stock,

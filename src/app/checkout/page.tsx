@@ -69,7 +69,10 @@ export default async function CheckoutPage() {
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold text-[#201713]">{line.name}</p>
                     <p className="mt-1 text-sm text-[#6d5a51]">
-                      {line.quantity} × {line.colorName}, size {line.size}
+                      {line.quantity} × {line.colorName}, {line.sizeLabel} {line.size}
+                      {line.secondSize
+                        ? `, ${line.secondSizeLabel} ${line.secondSize}`
+                        : ""}
                     </p>
                     <p
                       className={`mt-2 text-xs font-semibold ${

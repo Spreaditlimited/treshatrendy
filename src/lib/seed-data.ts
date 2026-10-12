@@ -83,6 +83,7 @@ export function createSeedVariants(productSlug: string, colors: readonly { name:
     sizes.map((size, sizeIndex) => ({
       sku: `${productSlug}-${color.name.toLowerCase().replaceAll(" ", "-")}-${size}`,
       size,
+      secondSize: "",
       colorName: color.name,
       colorHex: color.hex,
       stock: Math.max(2, 8 - (sizeIndex % 4)),

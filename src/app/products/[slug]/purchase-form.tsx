@@ -11,6 +11,7 @@ import { sizes as storeSizes, type CurrencyCode } from "@/lib/store";
 type VariantOption = {
   id: string;
   size: string;
+  secondSize: string;
   colorName: string;
   colorHex: string | null;
   stock: number;
@@ -20,6 +21,7 @@ type VariantOption = {
 
 type PurchaseFormProps = {
   activeCurrency: CurrencyCode;
+  pairedSizeLabels?: { first: string; second: string };
   variants: VariantOption[];
 };
 
@@ -42,7 +44,12 @@ function sortSizes(values: string[]) {
   });
 }
 
-export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
+export function PurchaseForm({
+  activeCurrency,
+  pairedSizeLabels,
+  variants,
+}: PurchaseFormProps) {
+  const pairedSizes = Boolean(pairedSizeLabels);
   const availableVariants = variants.filter(
     (variant) => getMarketStock(variant, activeCurrency) > 0,
   );
@@ -55,7 +62,33 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
         .map((variant) => variant.size),
     ),
   );
-  const [selectedSize, setSelectedSize] = useState(sizes[0] ?? "");
+  const initialSize = sizes[0] ?? "";
+  const [selectedSize, setSelectedSize] = useState(initialSize);
+  const secondSizes = sortSizes(
+    uniqueValues(
+      availableVariants
+        .filter(
+          (variant) =>
+            variant.colorName === selectedColor &&
+            variant.size === selectedSize &&
+            variant.secondSize,
+        )
+        .map((variant) => variant.secondSize),
+    ),
+  );
+  const initialSecondSize = sortSizes(
+    uniqueValues(
+      availableVariants
+        .filter(
+          (variant) =>
+            variant.colorName === colors[0] &&
+            variant.size === initialSize &&
+            variant.secondSize,
+        )
+        .map((variant) => variant.secondSize),
+    ),
+  )[0] ?? "";
+  const [selectedSecondSize, setSelectedSecondSize] = useState(initialSecondSize);
   const [quantity, setQuantity] = useState(1);
   const [cartState, addToCartFormAction, isAdding] = useActionState(
     addToCartAction,
@@ -68,7 +101,9 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
 
   const selectedVariant = availableVariants.find(
     (variant) =>
-      variant.colorName === selectedColor && variant.size === selectedSize,
+      variant.colorName === selectedColor &&
+      variant.size === selectedSize &&
+      variant.secondSize === (pairedSizes ? selectedSecondSize : ""),
   );
   const selectedMarketStock = selectedVariant
     ? getMarketStock(selectedVariant, activeCurrency)
@@ -76,6 +111,8 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
   const availability = getAvailabilityMessage(selectedVariant, activeCurrency);
 
   const visibleSizes = sizes.length > 0 ? sizes : [...storeSizes];
+  const visibleSecondSizes =
+    secondSizes.length > 0 ? secondSizes : [...storeSizes];
   const error = cartState.error ?? buyState.error;
   const safeQuantity =
     selectedMarketStock > 0 ? Math.min(quantity, selectedMarketStock) : quantity;
@@ -90,7 +127,35 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
       ),
     )[0];
     setSelectedSize(firstSize ?? "");
+    const firstSecondSize = sortSizes(
+      uniqueValues(
+        availableVariants
+          .filter((variant) => variant.colorName === colorName && variant.size === firstSize)
+          .map((variant) => variant.secondSize)
+          .filter(Boolean),
+      ),
+    )[0];
+    setSelectedSecondSize(firstSecondSize ?? "");
     setQuantity(1);
+  }
+
+  function selectFirstSize(size: string) {
+    setSelectedSize(size);
+    const matchingSecondSizes = sortSizes(
+      uniqueValues(
+        availableVariants
+          .filter((variant) => variant.colorName === selectedColor && variant.size === size)
+          .map((variant) => variant.secondSize)
+          .filter(Boolean),
+      ),
+    );
+    if (!matchingSecondSizes.includes(selectedSecondSize)) {
+      setSelectedSecondSize(matchingSecondSizes[0] ?? "");
+    }
+  }
+
+  function selectSecondSize(size: string) {
+    setSelectedSecondSize(size);
   }
 
   return (
@@ -128,16 +193,21 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Sizes</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-[0.14em]">
+          {pairedSizeLabels?.first ?? "Sizes"}
+        </h2>
         <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-9">
           {visibleSizes.map((size) => {
             const isAvailable = availableVariants.some(
               (variant) =>
-                variant.colorName === selectedColor && variant.size === size,
+                variant.colorName === selectedColor &&
+                variant.size === size &&
+                (!pairedSizes || Boolean(variant.secondSize)),
             );
 
             return (
               <button
+                aria-pressed={selectedSize === size}
                 className={`flex h-11 items-center justify-center rounded-md border text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-35 ${
                   selectedSize === size
                     ? "border-[#201713] bg-[#201713] text-white"
@@ -145,7 +215,7 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
                 }`}
                 disabled={!isAvailable}
                 key={size}
-                onClick={() => setSelectedSize(size)}
+                onClick={() => selectFirstSize(size)}
                 type="button"
               >
                 {size}
@@ -154,6 +224,41 @@ export function PurchaseForm({ activeCurrency, variants }: PurchaseFormProps) {
           })}
         </div>
       </div>
+
+      {pairedSizeLabels ? (
+        <div className="mt-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.14em]">
+            {pairedSizeLabels.second}
+          </h2>
+          <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-9">
+            {visibleSecondSizes.map((size) => {
+              const isAvailable = availableVariants.some(
+                (variant) =>
+                  variant.colorName === selectedColor &&
+                  variant.size === selectedSize &&
+                  variant.secondSize === size,
+              );
+
+              return (
+                <button
+                  aria-pressed={selectedSecondSize === size}
+                  className={`flex h-11 items-center justify-center rounded-md border text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-35 ${
+                    selectedSecondSize === size
+                      ? "border-[#201713] bg-[#201713] text-white"
+                      : "border-[#e8ded5] bg-white text-[#201713]"
+                  }`}
+                  disabled={!isAvailable}
+                  key={size}
+                  onClick={() => selectSecondSize(size)}
+                  type="button"
+                >
+                  {size}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-2 text-sm font-medium text-[#3b2a22] sm:max-w-40">
         Quantity

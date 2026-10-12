@@ -49,7 +49,11 @@ export async function createStripeCheckoutSession({
         price_data: {
           currency,
           product_data: {
-            name: `${line.name} - ${line.colorName}, size ${line.size}`.slice(0, 250),
+            name: `${line.name} - ${line.colorName}, ${line.sizeLabel} ${line.size}${
+              line.secondSize
+                ? `, ${line.secondSizeLabel} ${line.secondSize}`
+                : ""
+            }`.slice(0, 250),
           },
           unit_amount: toMinorUnit(line.unitPrice),
         },

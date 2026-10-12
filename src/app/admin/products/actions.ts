@@ -62,24 +62,55 @@ function readProductStatus(formData: FormData) {
   return status === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
 }
 
-function readVariants(formData: FormData, colors: ColorInput[]) {
-  return colors.flatMap((color) =>
-    sizes.map((size) => {
+async function hasPairedSizes(formData: FormData) {
+  if (!prisma) {
+    return false;
+  }
+
+  const pairedSlugs = new Set(["mr-mrs", "mom-daughter"]);
+  const categories = await prisma.category.findMany({
+    where: {
+      id: { in: readCategoryIds(formData) },
+    },
+    select: { slug: true },
+  });
+
+  return categories.some((category) => pairedSlugs.has(category.slug));
+}
+
+function readVariants(
+  formData: FormData,
+  colors: ColorInput[],
+  pairedSizes: boolean,
+) {
+  return colors.flatMap((color) => {
+    const sizePairs = pairedSizes
+      ? sizes.flatMap((size) => sizes.map((secondSize) => ({ size, secondSize })))
+      : sizes.map((size) => ({ size, secondSize: "" }));
+
+    return sizePairs.map(({ size, secondSize }) => {
+      const stockKey = secondSize
+        ? `${color.index}-${size}-${secondSize}`
+        : `${color.index}-${size}`;
       const nigeriaStock = Math.max(
         0,
-        Math.floor(readNumber(formData, `nigeria-stock-${color.index}-${size}`)),
+        Math.floor(readNumber(formData, `nigeria-stock-${stockKey}`)),
       );
       const canadaStock = Math.max(
         0,
-        Math.floor(readNumber(formData, `canada-stock-${color.index}-${size}`)),
+        Math.floor(readNumber(formData, `canada-stock-${stockKey}`)),
       );
       const stock = nigeriaStock + canadaStock;
+      const skuPrefix = `${readString(formData, "slug") || readString(formData, "name")}-${color.name}`;
 
       return {
         sku: createSlug(
-          `${readString(formData, "slug") || readString(formData, "name")}-${color.name}-${size}`,
+          secondSize
+            ? `${skuPrefix}-${size}-${secondSize}`
+            : `${skuPrefix}-${size}`,
         ),
         size,
+        secondSize,
         colorName: color.name,
         colorHex: color.hex,
         stock,
@@ -87,8 +118,8 @@ function readVariants(formData: FormData, colors: ColorInput[]) {
         canadaStock,
         isActive: true,
       };
-    }),
-  );
+    });
+  });
 }
 
 async function saveUploadedImages(files: File[], slug: string) {
@@ -169,6 +200,7 @@ export async function createProductAction(
   const name = readString(formData, "name");
   const slug = createSlug(readString(formData, "slug") || name);
   const status = readProductStatus(formData);
+  const pairedSizes = await hasPairedSizes(formData);
   const images = await saveUploadedImages(
     formData.getAll("images").filter((file): file is File => file instanceof File),
     slug,
@@ -205,7 +237,7 @@ export async function createProductAction(
         create: images,
       },
       variants: {
-        create: readVariants(formData, colors),
+        create: readVariants(formData, colors, pairedSizes),
       },
     },
   });
@@ -238,6 +270,7 @@ export async function updateProductAction(
   const name = readString(formData, "name");
   const slug = createSlug(readString(formData, "slug") || name);
   const status = readProductStatus(formData);
+  const pairedSizes = await hasPairedSizes(formData);
   const replaceImages = readString(formData, "replaceImages") === "yes";
   const uploadedImages = await saveUploadedImages(
     formData.getAll("images").filter((file): file is File => file instanceof File),
@@ -278,7 +311,7 @@ export async function updateProductAction(
           create: readPrices(formData),
         },
         variants: {
-          create: readVariants(formData, colors),
+          create: readVariants(formData, colors, pairedSizes),
         },
         images:
           uploadedImages.length > 0

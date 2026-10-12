@@ -12,7 +12,14 @@ export default function WomenPage() {
       eyebrow="Women's Collection"
       title="Elegant African Fashion for Every Occasion"
       description="Discover refined silhouettes, distinctive prints and timeless pieces curated for women who dress with confidence, culture and ease."
-      categorySlugs={["dresses", "tops", "bottoms", "sets"]}
+      categorySlugs={[
+        "dresses",
+        "tops",
+        "bottoms",
+        "sets",
+        "mr-mrs",
+        "mom-daughter",
+      ]}
       shopHref="/shop?category=dresses"
     />
   );

@@ -111,9 +111,10 @@ async function main() {
     for (const variant of createSeedVariants(product.slug, product.colors)) {
       await prisma.productVariant.upsert({
         where: {
-          productId_size_colorName: {
+          productId_size_secondSize_colorName: {
             productId: createdProduct.id,
             size: variant.size,
+            secondSize: variant.secondSize,
             colorName: variant.colorName,
           },
         },

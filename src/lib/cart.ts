@@ -22,6 +22,9 @@ export type CartLine = {
   slug: string;
   imageUrl: string;
   size: string;
+  sizeLabel: string;
+  secondSize: string;
+  secondSizeLabel: string;
   colorName: string;
   colorHex: string | null;
   quantity: number;
@@ -134,6 +137,13 @@ export async function getCartSummary(
                 take: 1,
               },
               prices: true,
+              categories: {
+                include: {
+                  category: {
+                    select: { slug: true },
+                  },
+                },
+              },
             },
           },
           variant: true,
@@ -164,6 +174,14 @@ export async function getCartSummary(
     const unitPrice = getChristmasSalePrice(originalUnitPrice, currency, now);
     const marketStock = getMarketStock(item.variant, currency);
     const availability = getAvailabilityMessage(item.variant, currency);
+    const categorySlugs = item.product.categories.map(
+      ({ category }) => category.slug,
+    );
+    const sizeLabels = categorySlugs.includes("mr-mrs")
+      ? { first: "Men's size", second: "Women's size" }
+      : categorySlugs.includes("mom-daughter")
+        ? { first: "Mom's size", second: "Daughter's size" }
+        : { first: "Size", second: "" };
 
     return {
       id: item.id,
@@ -173,6 +191,9 @@ export async function getCartSummary(
       slug: item.product.slug,
       imageUrl: item.product.images[0]?.url ?? "/images/treshatrendy-hero.png",
       size: item.variant.size,
+      sizeLabel: sizeLabels.first,
+      secondSize: item.variant.secondSize,
+      secondSizeLabel: sizeLabels.second,
       colorName: item.variant.colorName,
       colorHex: item.variant.colorHex,
       quantity: item.quantity,

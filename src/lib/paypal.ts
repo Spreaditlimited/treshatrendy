@@ -117,7 +117,11 @@ export async function createPayPalOrder({
           },
         },
         items: cart.lines.map((line) => ({
-          name: line.name.slice(0, 127),
+          name: `${line.name} - ${line.colorName}, ${line.sizeLabel} ${line.size}${
+            line.secondSize
+              ? `, ${line.secondSizeLabel} ${line.secondSize}`
+              : ""
+          }`.slice(0, 127),
           quantity: String(line.quantity),
           sku: line.variantId,
           unit_amount: {

@@ -105,7 +105,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
             ))}
           </div>
 
-          <PurchaseForm activeCurrency={activeCurrency} variants={product.variants} />
+          <PurchaseForm
+            activeCurrency={activeCurrency}
+            pairedSizeLabels={
+              product.categorySlugs.includes("mr-mrs")
+                ? { first: "Men's size", second: "Women's size" }
+                : product.categorySlugs.includes("mom-daughter")
+                  ? { first: "Mom's size", second: "Daughter's size" }
+                  : undefined
+            }
+            variants={product.variants}
+          />
         </div>
       </section>
     </main>
