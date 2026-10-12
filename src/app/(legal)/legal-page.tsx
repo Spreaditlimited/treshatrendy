@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MainNavigation } from "@/components/main-navigation";
 import { Logo } from "@/components/logo";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -18,6 +19,7 @@ export function LegalPage({ eyebrow, title, description, sections }: LegalPagePr
       <header className="border-b border-neutral-100 bg-[#FCFBFA]/90 backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-[96rem] items-center justify-between px-6 lg:px-12">
           <Logo />
+          <MainNavigation />
           <Link
             className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-600 transition hover:text-neutral-900"
             href="/shop"

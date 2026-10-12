@@ -3,10 +3,10 @@ import Link from "next/link";
 import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
+import { MainNavigation } from "@/components/main-navigation";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SalePrice } from "@/components/sale-price";
 import { getActiveCurrency } from "@/lib/currency";
-import { mainNavItems } from "@/lib/navigation";
 import { getStoreProducts } from "@/lib/products";
 
 type CollectionPageProps = {
@@ -39,13 +39,7 @@ export async function CollectionPage({
       <header className="relative border-b border-[#e8ded5] bg-white">
         <div className="mx-auto flex min-h-16 max-w-[92rem] flex-wrap items-center justify-between gap-4 px-3 py-3 sm:px-5 lg:px-6">
           <Logo />
-          <nav className="hidden flex-wrap items-center gap-5 text-sm font-semibold text-[#5c4b42] md:flex">
-            {mainNavItems.map((item) => (
-              <Link href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <MainNavigation />
           <div className="flex items-center gap-2">
             <div className="hidden sm:block">
               <CurrencySwitcher activeCurrency={activeCurrency} redirectTo={shopHref.split("?")[0]} />

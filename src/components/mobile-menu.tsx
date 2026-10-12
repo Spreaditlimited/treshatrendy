@@ -8,7 +8,7 @@ export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="md:hidden">
+    <div className="xl:hidden">
       <button
         aria-expanded={isOpen}
         aria-label="Open menu"

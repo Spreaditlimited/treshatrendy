@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
+import { MainNavigation } from "@/components/main-navigation";
+import { MobileMenu } from "@/components/mobile-menu";
 import { SiteFooter } from "@/components/site-footer";
 import { clearCurrentCart } from "@/lib/cart";
 import { prisma } from "@/lib/db";
@@ -74,6 +77,13 @@ export default async function CheckoutSuccessPage({
 
   return (
     <main className="min-h-screen bg-[#fbfaf7] text-[#201713]">
+      <header className="border-b border-[#e8ded5] bg-white">
+        <div className="mx-auto flex min-h-16 max-w-[92rem] items-center justify-between gap-3 px-3 py-3 sm:px-5 lg:px-6">
+          <Logo />
+          <MainNavigation activeHref="/shop" />
+          <MobileMenu />
+        </div>
+      </header>
       <section className="mx-auto max-w-[92rem] px-4 py-10 sm:px-6 lg:px-10">
         <div className="overflow-hidden rounded-lg border border-[#e8ded5] bg-white shadow-sm">
           <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">

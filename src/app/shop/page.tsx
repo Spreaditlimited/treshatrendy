@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
+import { MainNavigation } from "@/components/main-navigation";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SalePrice } from "@/components/sale-price";
 import { getStoreCategories, getStoreProducts } from "@/lib/products";
@@ -104,6 +105,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       <header className="relative border-b border-[#e8ded5] bg-white">
         <div className="mx-auto flex min-h-16 max-w-[92rem] items-center justify-between gap-3 px-3 py-3 sm:px-5 lg:px-6">
           <Logo />
+          <MainNavigation activeHref="/shop" />
           <div className="flex items-center gap-3">
             <div className="hidden sm:block">
               <CurrencySwitcher

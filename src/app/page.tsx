@@ -3,11 +3,11 @@ import Link from "next/link";
 import { CurrencySwitcher } from "@/app/currency/currency-switcher";
 import { HeaderActions } from "@/components/header-actions";
 import { Logo } from "@/components/logo";
+import { MainNavigation } from "@/components/main-navigation";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SiteFooter } from "@/components/site-footer";
 import { SalePrice } from "@/components/sale-price";
 import { getActiveCurrency } from "@/lib/currency";
-import { mainNavItems } from "@/lib/navigation";
 import { getStoreProducts } from "@/lib/products";
 
 const collections = [
@@ -49,19 +49,7 @@ export default async function Home() {
       <header className="sticky top-0 z-30 border-b border-neutral-100 bg-[#FCFBFA]/90 backdrop-blur-md">
         <div className="relative mx-auto flex h-20 max-w-[96rem] items-center justify-between px-6 lg:px-12">
           <Logo />
-          <nav className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.2em] text-neutral-600 md:flex">
-            {mainNavItems.map((item) => (
-              <Link
-                className={`transition-colors duration-300 hover:text-neutral-900 ${
-                  item.href === "/" ? "text-neutral-900 font-semibold" : ""
-                }`}
-                href={item.href}
-                key={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <MainNavigation activeHref="/" />
           <div className="flex items-center gap-4">
             <div className="hidden sm:block text-xs uppercase tracking-wider">
               <CurrencySwitcher activeCurrency={activeCurrency} redirectTo="/" />
