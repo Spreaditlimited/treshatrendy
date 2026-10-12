@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CurrencySwitcher } from "@/app/currency/currency-switcher";
@@ -10,6 +9,7 @@ import { SalePrice } from "@/components/sale-price";
 import { getStoreProductBySlug } from "@/lib/products";
 import { getActiveCurrency } from "@/lib/currency";
 import { currencies } from "@/lib/store";
+import { ProductImageGallery } from "./product-image-gallery";
 import { PurchaseForm } from "./purchase-form";
 
 type ProductPageProps = {
@@ -68,16 +68,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </header>
 
       <section className="mx-auto grid max-w-[92rem] gap-10 px-3 py-10 sm:px-5 lg:grid-cols-2 lg:px-6">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-[#eee3d8]">
-          <Image
-            src={product.imageUrl}
-            alt={product.name}
-            fill
-            priority
-            className="object-cover"
-            sizes="(min-width: 1024px) 50vw, 100vw"
-          />
-        </div>
+        <ProductImageGallery images={product.images} productName={product.name} />
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8a3f2b]">
